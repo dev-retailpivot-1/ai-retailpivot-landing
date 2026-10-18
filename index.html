@@ -800,5 +800,68 @@ window.addEventListener('message', function (e) {
   }
 });
 </script>
+
+<script>
+// Video tracking - demo video interactions
+var demoVideo = document.querySelector('.video-frame video');
+if (demoVideo) {
+  var thresholds = [25, 50, 75, 90];
+  var reached = [];
+
+  demoVideo.addEventListener('play', function () {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: 'video_interaction',
+      video_status: 'start',
+      video_percent: 0,
+      video_title: 'RetailPivot Demo',
+      video_url: demoVideo.currentSrc || demoVideo.src,
+      video_provider: 'html5'
+    });
+  });
+
+  demoVideo.addEventListener('pause', function () {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: 'video_interaction',
+      video_status: 'pause',
+      video_percent: Math.round((demoVideo.currentTime / demoVideo.duration) * 100),
+      video_title: 'RetailPivot Demo',
+      video_url: demoVideo.currentSrc || demoVideo.src,
+      video_provider: 'html5'
+    });
+  });
+
+  demoVideo.addEventListener('ended', function () {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: 'video_interaction',
+      video_status: 'complete',
+      video_percent: 100,
+      video_title: 'RetailPivot Demo',
+      video_url: demoVideo.currentSrc || demoVideo.src,
+      video_provider: 'html5'
+    });
+  });
+
+  demoVideo.addEventListener('timeupdate', function () {
+    var pct = Math.round((demoVideo.currentTime / demoVideo.duration) * 100);
+    thresholds.forEach(function (t) {
+      if (pct >= t && reached.indexOf(t) === -1) {
+        reached.push(t);
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          event: 'video_interaction',
+          video_status: 'progress',
+          video_percent: t,
+          video_title: 'RetailPivot Demo',
+          video_url: demoVideo.currentSrc || demoVideo.src,
+          video_provider: 'html5'
+        });
+      }
+    });
+  });
+}
+</script>
 </body>
 </html>
