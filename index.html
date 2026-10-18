@@ -780,5 +780,40 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </script>
 
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"37d5ffd901a148e4a3f797ba4ed67154","r":1}' crossorigin="anonymous"></script>
+window.addEventListener('message', function (e) {
+
+var d = e.data;
+
+if (!d || d.source !== 'retailpivot-onboarding') return;
+
+if (d.event === 'onboarding_submit') {
+
+var params = {
+
+industria: d.industria, ubicacion: d.ubicacion,
+
+facturacion: d.facturacion, urgencia: d.urgencia,
+
+fuente: d.fuente, utm_campaign: d.utm_campaign
+
+};
+
+// Google Tag Manager
+
+window.dataLayer = window.dataLayer || [];
+
+window.dataLayer.push(Object.assign({ event: 'onboarding_submit' }, params));
+
+// GA4 (si usas gtag directo)
+
+if (window.gtag) gtag('event', 'generate_lead', params);
+
+// Meta Pixel
+
+if (window.fbq) fbq('track', 'Lead', params);
+
+}
+
+});
 </body>
 </html>
